@@ -10,8 +10,10 @@ public class Prospect {
     BigDecimal bidAmount;
     String[] practiceAreas;
     BigDecimal relativeValuePerMonthPerPosition;
+    boolean requiresSecurityClearance;
 
-    public Prospect(String name, int contractLengthInMonths, int positions, BigDecimal bidAmount, String[] practiceAreas) {
+    public Prospect(String name, int contractLengthInMonths, int positions, BigDecimal bidAmount,
+                    String[] practiceAreas, boolean requiresSecurityClearance) {
         this.name = name;
         this.contractLengthInMonths = contractLengthInMonths;
         this.positions = positions;
@@ -19,6 +21,7 @@ public class Prospect {
         this.practiceAreas = practiceAreas;
         this.relativeValuePerMonthPerPosition = calculateRelativeValuePerMonthPerPositon(bidAmount,
                 contractLengthInMonths, positions);
+        this.requiresSecurityClearance = requiresSecurityClearance;
     }
 
     private BigDecimal calculateRelativeValuePerMonthPerPositon(BigDecimal bidAmount,

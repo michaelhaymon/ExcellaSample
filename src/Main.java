@@ -36,12 +36,16 @@ public class Main {
                 //  would result in paying developers less than federal
                 //  minimum wage.
                 .filter(p -> isBidOverMinimumPerPosition(p.relativeValuePerMonthPerPosition))
-                //  Sort by contract length, then relative value per month per position.
+                //  Sort by contract length, then relative value per month per position, then
+                //  by lowest number of positions required to fulfill contract.
                 .sorted(Comparator
-                        .comparing(Prospect::getContractLengh)
-                        .thenComparing(Prospect::getRelativeValuePerMonthPerPosition)
+                        .comparing(Prospect::getContractLengh).reversed()
+                        .thenComparing(Prospect::getRelativeValuePerMonthPerPosition).reversed()
+                        .thenComparing(Prospect::getPositions)
                 )
                 .collect(Collectors.toList());
+
+        staffProspect(prospects);
 
 //        {
 //            Federal offers, pull list of employees with clearance
@@ -53,10 +57,25 @@ public class Main {
 
     }
 
+    //  employeeService connects to repository interface of Excella employees
+    //  and extends JpaRepository for CRUD functionality.
+    private static void staffProspect(Collection<Prospect> prospects) {
+        Collection<Employee> federalEmployees = employeeService.getAllBySecurityClearanceTrue();
+        Collection<Employee> employees = employeeService.getAllBySecurityClearanceFalse();
+
+        for(Prospect prospect : prospects) {
+            if (prospect.)
+        }
+    }
+
     //  Returns if bid amount is over minimum wage per position required.
     private static boolean isBidOverMinimumPerPosition(BigDecimal relativeValuePerMonthPerPosition) {
         return (relativeValuePerMonthPerPosition.multiply(BigDecimal.valueOf(12)))
                 .compareTo(BigDecimal.valueOf(Prospect.MINIMUM_AMOUNT_PER_ROLE)) > 1;
     }
+
+
+
+
 
 }
