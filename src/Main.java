@@ -71,7 +71,7 @@ public class Main {
                     }
                     federalEmployees.removeAll(qualifiedEmployees);
                     buildAndSendContract(prospect, qualifiedEmployees);
-                B}
+                }
 
                 // Sends prospect information to someone who can begin looking for candidates.
                 sendProspectToRecruiting(prospect);
