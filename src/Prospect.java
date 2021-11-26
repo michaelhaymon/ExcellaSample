@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.Collection;
 
 @Data
 public class Prospect {
@@ -8,12 +9,12 @@ public class Prospect {
     int contractLengthInMonths;
     int positions;
     BigDecimal bidAmount;
-    String[] practiceAreas;
+    Collection<String> practiceAreas;
     BigDecimal relativeValuePerMonthPerPosition;
     boolean requiresSecurityClearance;
 
     public Prospect(String name, int contractLengthInMonths, int positions, BigDecimal bidAmount,
-                    String[] practiceAreas, boolean requiresSecurityClearance) {
+                    Collection<String> practiceAreas, boolean requiresSecurityClearance) {
         this.name = name;
         this.contractLengthInMonths = contractLengthInMonths;
         this.positions = positions;

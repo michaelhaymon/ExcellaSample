@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -14,7 +15,8 @@ import java.util.stream.Collectors;
     a detailed pseudocode representation of how that batch job might
     function and provide utility to Excella. This is a purely a theoretical
     example to indicate my capabilities and train of thought while coding,
-    not a representation of any sort of actual intended application.
+    not a representation of any sort of actual intended application. Some
+    access modifiers were chosen for simplicity, not security.
  */
 
 public class Main {
@@ -46,15 +48,6 @@ public class Main {
                 .collect(Collectors.toList());
 
         staffProspect(prospects);
-
-//        {
-//            Federal offers, pull list of employees with clearance
-//            Normal offers, pull list of anyone.
-//                Check number of employees available,
-//            If number of employee are available, sent to Account Manager/Project Manager
-//            If number of employees are NOT available, sent to recruiting
-//        }
-
     }
 
     //  employeeService connects to repository interface of Excella employees
@@ -63,9 +56,58 @@ public class Main {
         Collection<Employee> federalEmployees = employeeService.getAllBySecurityClearanceTrue();
         Collection<Employee> employees = employeeService.getAllBySecurityClearanceFalse();
 
-        for(Prospect prospect : prospects) {
-            if (prospect.)
+        for (Prospect prospect : prospects) {
+            if (prospect.getRequiresSecurityClearance()) {
+                int prospectPositions = prospect.getPositions();
+                Collection<Employee> qualifiedEmployees = new ArrayList<>();
+                if (federalEmployees.size() > prospectPositions) {
+                    while (prospectPositions > 0) {
+                        for (Employee federalEmployee : federalEmployees) {
+                            if (federalEmployee.getPracticeAreas().containsAll(prospect.getPracticeAreas())) {
+                                qualifiedEmployees.add(federalEmployee);
+                                prospectPositions--;
+                            }
+                        }
+                    }
+                    federalEmployees.removeAll(qualifiedEmployees);
+                    buildAndSendContract(prospect, qualifiedEmployees);
+                }
+
+                // Sends prospect information to someone who can begin looking for candidates.
+                sendProspectToRecruiting(prospect);
+            } else {
+                int prospectPositions = prospect.getPositions();
+                Collection<Employee> qualifiedEmployees = new ArrayList<>();
+                if (employees.size() > prospectPositions) {
+                    while (prospectPositions > 0) {
+                        for (Employee employee : employees) {
+                            if (employee.getPracticeAreas().containsAll(prospect.getPracticeAreas())) {
+                                qualifiedEmployees.add(employee);
+                                prospectPositions--;
+                            }
+                        }
+                    }
+                    employees.removeAll(qualifiedEmployees);
+                    buildAndSendContract(prospect, qualifiedEmployees);
+                }
+                // Sends prospect information to someone who can begin looking for candidates.
+                sendProspectToRecruiting(prospect);
+            }
         }
+    }
+
+    public static void buildAndSendContract(Prospect prospect, Collection<Employee> qualifiedEmployees) {
+        Contract contract = new Contract().builder()
+                .name(prospect.getName())
+                .federal(prospect.getRequiresSecurityClearance())
+                .bidAmount(prospect.getBidAmount())
+                .contractLength(prospect.getContractLenghtInMonths())
+                .positions(qualifiedEmployees.size())
+                .practiceAreas(prospect.getPracticeAreas())
+                .employees(qualifiedEmployees);
+
+        //  Sends contract information to someone who can begin setting up the team.
+        sendContractToAccountManager(contract);
     }
 
     //  Returns if bid amount is over minimum wage per position required.
@@ -73,9 +115,6 @@ public class Main {
         return (relativeValuePerMonthPerPosition.multiply(BigDecimal.valueOf(12)))
                 .compareTo(BigDecimal.valueOf(Prospect.MINIMUM_AMOUNT_PER_ROLE)) > 1;
     }
-
-
-
 
 
 }
