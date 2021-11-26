@@ -1,5 +1,6 @@
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /*
@@ -35,17 +36,12 @@ public class Main {
                 //  would result in paying developers less than federal
                 //  minimum wage.
                 .filter(p -> isBidOverMinimumPerPosition(p.relativeValuePerMonthPerPosition))
+                //  Sort by contract length, then relative value per month per position.
+                .sorted(Comparator
+                        .comparing(Prospect::getContractLengh)
+                        .thenComparing(Prospect::getRelativeValuePerMonthPerPosition)
+                )
                 .collect(Collectors.toList());
-
-       // Offer too high need to go for review to see if there was a messed up number
-//            Send to sales
-        //        }
-//
-//        {
-//            Sort Prospects by (bidAmount/contractLengthInMonths)/positions to get RelativeDollarValuePerEmployeePerMonth
-//
-//            EXTRACT CALCULATION
-//        }
 
 //        {
 //            Federal offers, pull list of employees with clearance

@@ -1,18 +1,17 @@
 import java.math.BigDecimal;
 
 @Data
-@Builder
 public class Prospect {
     public static final int MINIMUM_AMOUNT_PER_ROLE = 15000;
     public static final int MINIMUM_POSITIONS = 3;
     String name;
     int contractLengthInMonths;
     int positions;
-    int bidAmount;
+    BigDecimal bidAmount;
     String[] practiceAreas;
     BigDecimal relativeValuePerMonthPerPosition;
 
-    public Prospect(String name, int contractLengthInMonths, int positions, int bidAmount, String[] practiceAreas) {
+    public Prospect(String name, int contractLengthInMonths, int positions, BigDecimal bidAmount, String[] practiceAreas) {
         this.name = name;
         this.contractLengthInMonths = contractLengthInMonths;
         this.positions = positions;
@@ -22,8 +21,8 @@ public class Prospect {
                 contractLengthInMonths, positions);
     }
 
-    private BigDecimal calculateRelativeValuePerMonthPerPositon(int bidAmount,
+    private BigDecimal calculateRelativeValuePerMonthPerPositon(BigDecimal bidAmount,
                                                                 int contractLengthInMonths, int positions){
-        return BigDecimal.valueOf((bidAmount/contractLengthInMonths)/positions);
+        return bidAmount.divide(BigDecimal.valueOf(contractLengthInMonths)).divide(BigDecimal.valueOf(positions));
     }
 }

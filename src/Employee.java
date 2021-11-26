@@ -1,9 +1,6 @@
-import jdk.jfr.DataAmount;
-
 import java.util.Collection;
 
 @Data
-@Builder
 public class Employee {
 
     public Employee(String name, boolean securityClearance, Collection<String> practiceAreas) {
